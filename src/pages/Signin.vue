@@ -12,7 +12,7 @@
     </tr>
     </table>
     <br>
-    <button class="button-login">ログイン</button>
+    <button>ログイン</button>
       <router-link to="/signup">新規登録はこちらから</router-link>
   </div>
 </template>
@@ -45,8 +45,6 @@ a {
   justify-content: center;
   align-items: center
 }
-button-login {
-  color: #4297b9;
-}
+
 
 </style>
