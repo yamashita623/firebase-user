@@ -1,23 +1,23 @@
 <template>
-  <div class="signup">
+  <div class='signup'>
     <h2>新規登録</h2>
     <table>
     <tr>
       <th>ユーザーネーム:</th>
-    <input type="text" placeholder="Username" v-model="username">
+    <input type='text' placeholder='Username' v-model='username'>
     </tr>
     <tr>
       <th>メールアドレス:</th>
-    <input type="email" placeholder="example@example.com" v-model="mailaddress">
+    <input type='email' placeholder='example@example.com' v-model='mailaddress'>
     </tr>
     <tr>
       <th>パスワード:</th>
-    <input type="password" placeholder="Password" v-model="password">
+    <input type='password' placeholder='Password' v-model='password'>
     </tr>
     </table>
     <br>
-    <button class="button-login" @click='signUp'>新規登録</button>
-      <router-link to="/signin">ログインはこちらから</router-link>
+    <button class='button-login' @click='SignUp'>新規登録</button>
+      <router-link to='/signin'>ログインはこちらから</router-link>
   </div>
 </template>
 
@@ -34,9 +34,14 @@ export default {
     }
   },
   methods: {
-    signUp: function () {
-      firebase.auth().createUserWithEmailAndPassword(this.username,this.mailaddress,this.password)
+    SignUp: function () {
+      firebase.auth().createUserWithEmailAndPassword(
+        this.mailaddress,
+        this.password)
         .then(user => {
+          user.user.updateProfile({
+            displayName: user.username
+          });
           alert('Create account: ', user.email)
         })
         .catch(error => {
@@ -47,7 +52,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
   font-weight: normal;
