@@ -12,12 +12,14 @@
     </tr>
     </table>
     <br>
-    <button>ログイン</button>
-      <router-link to="/signup">新規登録はこちらから</router-link>
+    <button @click='SignIn'>ログイン</button>
+      <router-link to="/Signup">新規登録はこちらから</router-link>
   </div>
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default {
   name: 'Signin',
   data () {
@@ -26,8 +28,18 @@ export default {
       password: ''
     }
   },
-  methods: {}
-}
+  methods: {
+    SignIn: function () {
+      firebase.auth().signInWithEmailAndPassword(this.mailaddress, this.password).then(
+       () => {
+          alert('Success!')
+          this.$router.push('/')
+        },
+        err => {
+          alert(err.message)
+        }
+      )
+    }}}
 </script>
 
 <style scoped>

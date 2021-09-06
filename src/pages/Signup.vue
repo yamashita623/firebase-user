@@ -4,15 +4,15 @@
     <table>
     <tr>
       <th>ユーザーネーム:</th>
-    <input type='text' placeholder='Username' v-model='username'>
+    <input type='text' placeholder='UserName' v-model='userInfo.userName'>
     </tr>
     <tr>
       <th>メールアドレス:</th>
-    <input type='email' placeholder='example@example.com' v-model='mailaddress'>
+    <input type='email' placeholder='example@example.com' v-model='userInfo.email'>
     </tr>
     <tr>
       <th>パスワード:</th>
-    <input type='password' placeholder='Password' v-model='password'>
+    <input type='password' placeholder='Password' v-model='userInfo.password'>
     </tr>
     </table>
     <br>
@@ -22,34 +22,18 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-
 export default {
-  name: 'Signup',
   data () {
     return {
-      username: '',
-      mailaddress: '',
+      userInfo: {
+      userName: '',
+      email: '',
       password: ''
-    }
+    }}
   },
   methods: {
-    SignUp: function () {
-      firebase.auth().createUserWithEmailAndPassword(
-        this.mailaddress,
-        this.password)
-        .then(user => {
-          user.user.updateProfile({
-            displayName: user.username
-          });
-          alert('Create account: ', user.email)
-        })
-        .catch(error => {
-          alert(error.message)
-        })
-    }
-  }
-}
+    SignUp(){this.$store.dispatch('signupUser',this.userInfo)
+}}}
 </script>
 
 <style scoped>
