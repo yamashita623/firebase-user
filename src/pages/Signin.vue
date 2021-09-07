@@ -4,11 +4,11 @@
     <table>
     <tr>
       <th>メールアドレス:</th>
-    <input type="email" placeholder="example@example.com" v-model="mailaddress">
+    <input type="email" placeholder="example@example.com" v-model="userInfo.email">
     </tr>
     <tr>
       <th>パスワード:</th>
-    <input type="password" placeholder="Password" v-model="password">
+    <input type="password" placeholder="Password" v-model="userInfo.password">
     </tr>
     </table>
     <br>
@@ -18,27 +18,17 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-
 export default {
   name: 'Signin',
   data () {
     return {
-      mailaddress: '',
+      userInfo: {
+      email: '',
       password: ''
-    }
+    }}
   },
   methods: {
-    SignIn: function () {
-      firebase.auth().signInWithEmailAndPassword(this.mailaddress, this.password).then(
-       () => {
-          alert('Success!')
-          this.$router.push('/')
-        },
-        err => {
-          alert(err.message)
-        }
-      )
+    SignIn(){this.$store.dispatch('signInUser',this.userInfo)
     }}}
 </script>
 

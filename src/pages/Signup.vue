@@ -32,7 +32,7 @@ export default {
     }}
   },
   methods: {
-    SignUp(){this.$store.dispatch('signupUser',this.userInfo)
+    SignUp(){this.$store.dispatch('signUpUser',this.userInfo)
 }}}
 </script>
 

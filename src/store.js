@@ -10,6 +10,7 @@ export default new Vuex.Store({
     userName: '',
     email: '',
     password: '',
+    status: false
   },
   getters: {
     email(state) {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     userName(state) {
       return state.userName;
+    },
+    status(state) {
+      return state.status
     },
   },
   mutations: {
@@ -32,9 +36,12 @@ export default new Vuex.Store({
     setUsername(state, userName) {
       state.userName = userName;
     },
+    onUserStatusChanged(state,status) {
+      state.status = status;
+    },
   },
   actions: {
-    signupUser({ commit }, userInfo) {
+    signUpUser({ commit }, userInfo) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
@@ -50,5 +57,22 @@ export default new Vuex.Store({
           console.log(e);
         });
     },
+    signInUser({ commit }, userInfo) {
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(userInfo.email, userInfo.password)
+      .then((response) => {
+        console.log(response);
+        commit('onUserStatusChanged', true)
+        const user = firebase.auth().currentUser;
+          commit('setEmail', user.email);
+          commit('setPassword', user.password);
+          commit('setUsername', user.userName);
+          router.push('/Signup');
+      })
+      .catch((e) => {
+          console.log(e);
+        });
+    }
   },
 });
