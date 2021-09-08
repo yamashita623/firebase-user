@@ -6,7 +6,7 @@ import Signup from './pages/Signup.vue';
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
+  mode: 'history',
   routes: [
     { path: '/', component: Signin },
     { path: '/signup', component: Signup },

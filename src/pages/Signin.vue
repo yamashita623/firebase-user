@@ -4,16 +4,16 @@
     <table>
     <tr>
       <th>メールアドレス:</th>
-    <input type="email" placeholder="example@example.com" v-model="mailaddress">
+    <input type="email" placeholder="example@example.com" v-model="userInfo.email">
     </tr>
     <tr>
       <th>パスワード:</th>
-    <input type="password" placeholder="Password" v-model="password">
+    <input type="password" placeholder="Password" v-model="userInfo.password">
     </tr>
     </table>
     <br>
-    <button>ログイン</button>
-      <router-link to="/signup">新規登録はこちらから</router-link>
+    <button @click='SignIn'>ログイン</button>
+      <router-link to="/Signup">新規登録はこちらから</router-link>
   </div>
 </template>
 
@@ -22,12 +22,14 @@ export default {
   name: 'Signin',
   data () {
     return {
-      mailaddress: '',
+      userInfo: {
+      email: '',
       password: ''
-    }
+    }}
   },
-  methods: {}
-}
+  methods: {
+    SignIn(){this.$store.dispatch('signInUser',this.userInfo)
+    }}}
 </script>
 
 <style scoped>

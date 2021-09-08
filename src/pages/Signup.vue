@@ -1,53 +1,41 @@
 <template>
-  <div class="signup">
+  <div class='signup'>
     <h2>新規登録</h2>
     <table>
     <tr>
       <th>ユーザーネーム:</th>
-    <input type="text" placeholder="Username" v-model="username">
+    <input type='text' placeholder='UserName' v-model='userInfo.userName'>
     </tr>
     <tr>
       <th>メールアドレス:</th>
-    <input type="email" placeholder="example@example.com" v-model="mailaddress">
+    <input type='email' placeholder='example@example.com' v-model='userInfo.email'>
     </tr>
     <tr>
       <th>パスワード:</th>
-    <input type="password" placeholder="Password" v-model="password">
+    <input type='password' placeholder='Password' v-model='userInfo.password'>
     </tr>
     </table>
     <br>
-    <button class="button-login" @click='signUp'>新規登録</button>
-      <router-link to="/signin">ログインはこちらから</router-link>
+    <button class='button-login' @click='SignUp'>新規登録</button>
+      <router-link to='/signin'>ログインはこちらから</router-link>
   </div>
 </template>
 
 <script>
-import firebase from 'firebase'
-
 export default {
-  name: 'Signup',
   data () {
     return {
-      username: '',
-      mailaddress: '',
+      userInfo: {
+      userName: '',
+      email: '',
       password: ''
-    }
+    }}
   },
   methods: {
-    signUp: function () {
-      firebase.auth().createUserWithEmailAndPassword(this.username,this.mailaddress,this.password)
-        .then(user => {
-          alert('Create account: ', user.email)
-        })
-        .catch(error => {
-          alert(error.message)
-        })
-    }
-  }
-}
+    SignUp(){this.$store.dispatch('signUpUser',this.userInfo)
+}}}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
   font-weight: normal;
