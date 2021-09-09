@@ -4,11 +4,11 @@
     <table>
     <tr>
       <th>メールアドレス:</th>
-    <input type="email" placeholder="example@example.com" v-model="userInfo.email">
+    <input type="email" placeholder="example@example.com" v-model="email">
     </tr>
     <tr>
       <th>パスワード:</th>
-    <input type="password" placeholder="Password" v-model="userInfo.password">
+    <input type="password" placeholder="Password" v-model="password">
     </tr>
     </table>
     <br>
@@ -22,13 +22,12 @@ export default {
   name: 'Signin',
   data () {
     return {
-      userInfo: {
       email: '',
       password: ''
-    }}
+    }
   },
   methods: {
-    SignIn(){this.$store.dispatch('signInUser',this.userInfo)
+    SignIn(){this.$store.dispatch('signInUser',this)
     }}}
 </script>
 
