@@ -1,38 +1,42 @@
 <template>
-  <div class="signin">
+  <div class='signin'>
     <h2>ログイン画面</h2>
     <table>
-    <tr>
-      <th>メールアドレス:</th>
-    <input type="email" placeholder="example@example.com" v-model="email">
-    </tr>
-    <tr>
-      <th>パスワード:</th>
-    <input type="password" placeholder="Password" v-model="password">
-    </tr>
+      <tr>
+        <th>メールアドレス:</th>
+        <input type='email' placeholder='example@example.com' v-model='email' />
+      </tr>
+      <tr>
+        <th>パスワード:</th>
+        <input type='password' placeholder='Password' v-model='password' />
+      </tr>
     </table>
-    <br>
+    <br />
     <button @click='SignIn'>ログイン</button>
-      <router-link to="/Signup">新規登録はこちらから</router-link>
+    <router-link to='/Signup'>新規登録はこちらから</router-link>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Signin',
-  data () {
+  data() {
     return {
       email: '',
-      password: ''
-    }
+      password: '',
+    };
   },
   methods: {
-    SignIn(){this.$store.dispatch('signInUser',this)
-    }}}
+    SignIn() {
+      this.$store.dispatch('signInUser', this);
+    },
+  },
+};
 </script>
 
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 a {
@@ -44,8 +48,6 @@ a {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
-
-
 </style>

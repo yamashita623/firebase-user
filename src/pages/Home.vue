@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="login-message-area">
+    <div class='login-message-area'>
       <div>
         <span>{{ userName }}さんようこそ！！</span>
       </div>
@@ -13,10 +13,10 @@
 
     <h1>ユーザ一覧</h1>
 
-    <div class="user-list-wrapper">
+    <div class='user-list-wrapper'>
       <h4>ユーザ名</h4>
 
-      <ul class="user-list">
+      <ul class='user-list'>
         <li>
           <span>TEST</span>
           <form>
@@ -44,25 +44,20 @@
 </template>
 
 <script>
-import firebase from 'firebase';
 import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
       userName: ''
-    };
-  },
-  computed: mapGetters(['getUserName']),
-  created () {
-  firebase.auth().onAuthStateChanged((user)=> {
-    if (user) {
-      this.userName = user.displayName
-    }
-  });
-},
-  mounted() {
+    }},
+    computed: mapGetters(['getUserName']),
+    created() {
+      this.$store.dispatch('displayName', this);
+    },
+     mounted() {
     this.userName = this.getUserName
   }
 };
+
 </script>

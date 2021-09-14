@@ -8,25 +8,29 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     status: false,
-    user: ''
+    user: '',
+    displayName: '',
   },
   getters: {
     getStatus(state) {
-      return state.status
+      return state.status;
     },
     getUser(state) {
-      return state.user
+      return state.user;
     },
     getUserName(state) {
-      return state.user.displayName
-    },
+      return state.displayName;
+    }
   },
   mutations: {
-    onUserStatusChanged(state,status) {
+    onUserStatusChanged(state, status) {
       state.status = status;
     },
     setUpDateUser(state, user) {
-            state.user = user;
+      state.user = user;
+    },
+    setUpDateDisplayName(state, user) {
+      state.displayName = user
     },
   },
   actions: {
@@ -40,6 +44,7 @@ export default new Vuex.Store({
           displayName: userInfo.userName
         });
         commit('setUpDateUser',user)
+        commit('setUpDateDisplayName',user.displayName)
         router.push('/Home');
       } catch (e) {
         alert(e.message);
@@ -53,10 +58,18 @@ export default new Vuex.Store({
         commit('onUserStatusChanged', true);
         const user = firebase.auth().currentUser;
           commit('setUpDateUser',user)
+          commit('setUpDateDisplayName',user.displayName)
           router.push('/Home');
       })
       .catch((e) => {
           alert(e.message);
         });
     },
-}});
+    displayName() {
+    firebase.auth().onAuthStateChanged((user) => {
+            if(user){
+                this.userName = user.displayName
+            }
+        })
+  }
+  }});
