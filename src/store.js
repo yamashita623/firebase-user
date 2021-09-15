@@ -7,72 +7,69 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    userName: '',
-    email: '',
-    password: '',
-    status: false
+    status: false,
+    user: '',
+    displayName: '',
   },
   getters: {
-    email(state) {
-      return state.email;
+    getStatus(state) {
+      return state.status;
     },
-    password(state) {
-      return state.password;
+    getUser(state) {
+      return state.user;
     },
-    userName(state) {
-      return state.userName;
-    },
-    status(state) {
-      return state.status
-    },
+    getUserName(state) {
+      return state.displayName;
+    }
   },
   mutations: {
-    setEmail(state, email) {
-      state.email = email;
-    },
-    setPassword(state, password) {
-      state.password = password;
-    },
-    setUsername(state, userName) {
-      state.userName = userName;
-    },
-    onUserStatusChanged(state,status) {
+    onUserStatusChanged(state, status) {
       state.status = status;
+    },
+    setUpDateUser(state, user) {
+      state.user = user;
+    },
+    setUpDateDisplayName(state, user) {
+      state.displayName = user
     },
   },
   actions: {
-    signUpUser({ commit }, userInfo) {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
-        .then((response) => {
-          console.log(response);
-          const user = firebase.auth().currentUser;
-          commit('setEmail', user.email);
-          commit('setPassword', user.password);
-          commit('setUsername', user.userName);
-          router.push('/');
-        })
-        .catch((e) => {
-          console.log(e);
+     async signUpUser({ commit },userInfo) {
+      try {
+        await firebase
+          .auth()
+          .createUserWithEmailAndPassword(userInfo.email, userInfo.password);
+        const user = firebase.auth().currentUser;
+        await user.updateProfile({
+          displayName: userInfo.userName
         });
+        commit('setUpDateUser',user)
+        commit('setUpDateDisplayName',user.displayName)
+        router.push('/Home');
+      } catch (e) {
+        alert(e.message);
+      }
     },
     signInUser({ commit }, userInfo) {
       firebase
       .auth()
       .signInWithEmailAndPassword(userInfo.email, userInfo.password)
-      .then((response) => {
-        console.log(response);
-        commit('onUserStatusChanged', true)
+      .then(() => {
+        commit('onUserStatusChanged', true);
         const user = firebase.auth().currentUser;
-          commit('setEmail', user.email);
-          commit('setPassword', user.password);
-          commit('setUsername', user.userName);
-          router.push('/Signup');
+          commit('setUpDateUser',user)
+          commit('setUpDateDisplayName',user.displayName)
+          router.push('/Home');
       })
       .catch((e) => {
-          console.log(e);
+          alert(e.message);
         });
-    }
-  },
-});
+    },
+    displayName() {
+    firebase.auth().onAuthStateChanged((user) => {
+            if(user){
+                this.userName = user.displayName
+            }
+        })
+  }
+  }});
