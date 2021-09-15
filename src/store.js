@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    status: false,
+    status: '',
     user: '',
     displayName: '',
   },
@@ -20,8 +20,9 @@ export default new Vuex.Store({
     },
     getUserName(state) {
       return state.displayName;
-    }
+    },
   },
+
   mutations: {
     onUserStatusChanged(state, status) {
       state.status = status;
@@ -30,46 +31,62 @@ export default new Vuex.Store({
       state.user = user;
     },
     setUpDateDisplayName(state, user) {
-      state.displayName = user
+      state.displayName = user;
+    },
+    resetState(state) {
+      const getDefaultState = () => {
+        return {
+          status: '',
+          user: '',
+          displayName: '',
+        };
+      };
+      Object.assign(state, getDefaultState());
     },
   },
   actions: {
-     async signUpUser({ commit },userInfo) {
+    async signUpUser({ commit }, userInfo) {
       try {
         await firebase
           .auth()
           .createUserWithEmailAndPassword(userInfo.email, userInfo.password);
         const user = firebase.auth().currentUser;
         await user.updateProfile({
-          displayName: userInfo.userName
+          displayName: userInfo.userName,
         });
-        commit('setUpDateUser',user)
-        commit('setUpDateDisplayName',user.displayName)
-        router.push('/Home');
+        commit('setUpDateUser', user);
+        commit('setUpDateDisplayName', user.displayName);
+        router.push('/home');
       } catch (e) {
         alert(e.message);
       }
     },
     signInUser({ commit }, userInfo) {
       firebase
-      .auth()
-      .signInWithEmailAndPassword(userInfo.email, userInfo.password)
-      .then(() => {
-        commit('onUserStatusChanged', true);
-        const user = firebase.auth().currentUser;
-          commit('setUpDateUser',user)
-          commit('setUpDateDisplayName',user.displayName)
-          router.push('/Home');
-      })
-      .catch((e) => {
+        .auth()
+        .signInWithEmailAndPassword(userInfo.email, userInfo.password)
+        .then(() => {
+          commit('onUserStatusChanged', true);
+          const user = firebase.auth().currentUser;
+          commit('setUpDateUser', user);
+          commit('setUpDateDisplayName', user.displayName);
+          router.push('/home');
+        })
+        .catch((e) => {
           alert(e.message);
         });
     },
     displayName() {
-    firebase.auth().onAuthStateChanged((user) => {
-            if(user){
-                this.userName = user.displayName
-            }
-        })
-  }
-  }});
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.userName = user.displayName;
+        }
+      });
+    },
+    logoutUser() {
+      firebase.auth().signOut();
+      this.commit('resetState');
+      router.push('/signin');
+    },
+  },
+});
