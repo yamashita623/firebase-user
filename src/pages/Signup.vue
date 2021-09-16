@@ -1,23 +1,23 @@
 <template>
-  <div class='signup'>
+  <div class="signup">
     <h2>新規登録</h2>
     <table>
       <tr>
         <th>ユーザーネーム:</th>
-        <input type='text' placeholder='UserName' v-model='userName' />
+        <input type="text" placeholder="UserName" v-model="userName" />
       </tr>
       <tr>
         <th>メールアドレス:</th>
-        <input type='email' placeholder='example@example.com' v-model='email' />
+        <input type="email" placeholder="example@example.com" v-model="email" />
       </tr>
       <tr>
         <th>パスワード:</th>
-        <input type='password' placeholder='Password' v-model='password' />
+        <input type="password" placeholder="Password" v-model="password" />
       </tr>
     </table>
     <br />
-    <button class='button-login' @click='SignUp'>新規登録</button>
-    <router-link to='/'>ログインはこちらから</router-link>
+    <button class="button-login" @click="SignUp">新規登録</button>
+    <router-link to="/signin">ログインはこちらから</router-link>
   </div>
 </template>
 

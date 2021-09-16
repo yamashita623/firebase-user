@@ -1,19 +1,19 @@
 <template>
-  <div class='signin'>
+  <div class="signin">
     <h2>ログイン画面</h2>
     <table>
       <tr>
         <th>メールアドレス:</th>
-        <input type='email' placeholder='example@example.com' v-model='email' />
+        <input type="email" placeholder="example@example.com" v-model="email" />
       </tr>
       <tr>
         <th>パスワード:</th>
-        <input type='password' placeholder='Password' v-model='password' />
+        <input type="password" placeholder="Password" v-model="password" />
       </tr>
     </table>
     <br />
-    <button @click='SignIn'>ログイン</button>
-    <router-link to='/Signup'>新規登録はこちらから</router-link>
+    <button @click="SignIn">ログイン</button>
+    <router-link to="/signup">新規登録はこちらから</router-link>
   </div>
 </template>
 
