@@ -1,79 +1,52 @@
 <template>
-  <div class="modal-content" v-show="showContent">
-    <div class="main-content">
-      <div  v-for="(user,index) in users" v-bind:key="index">
-      <p>{{ user.name }}さんの残高</p>
-      <p>{{ user.MyWallet}}</p>
-      </div>
-      <div id="button-content">
-        <p>
-          <button @click="closeModal" class="modal-button">close</button>
-        </p>
+  <transition name="modal">
+    <div class="modal-mask" @click="$emit('close')">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+      <p>{{ val.name }}さんの残高</p>
+      <p>{{ val.MyWallet }}</p>
+      <button @click="$emit('closeModal')">閉じる</button>
+    </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
-
-
 <script>
-import firebase from "firebase";
-export default {
-  data() {
-    return {
-      showContent: false,
-      userData:[],
-    };
-  },
-  props:['usersIndex'],
-  methods: {
-    openModal() {
-      this.$emit("open", this.showContent);
-    },
-    closeModal() {
-      this.$emit("close", this.showContent);
-    },
-      returnUserData(id) {
-      const userData = this.userData.find((user) => user.uid === id);
-      return userData;
-    },
-  },
-
-  mounted() {
-
-
-    firebase.auth().onAuthStateChanged(() => {
-      const currentUser = firebase.auth().currentUser;
-      this.uid = currentUser.uid;
-      firebase
-      .firestore()
-      .collection("users")
-      .where(firebase.firestore.FieldPath.documentId(), "!=", currentUser.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let data = {
-            name: doc.data().name,
-            MyWallet: doc.data().MyWallet,
-          };
-          this.userData.push(data);
-        });
-      });
-
-
-    });
-  },
-};
+  export default {
+    name: 'Modal',
+    props: {
+      val: {
+        type: Object
+      }
+    }
+  }
 </script>
 
 <style scoped>
-#modal-content{
-	width:50%;
-	margin:1.5em auto 0;
-	padding:10px 20px;
-	border:2px solid #aaa;
-	background:#fff;
-	z-index:2;
-}
-
+  .modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+  }
+  .modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .modal-container {
+    width: 70%;
+    margin: 0px auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+  }
 </style>

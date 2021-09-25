@@ -13,7 +13,6 @@ export default new Vuex.Store({
     displayName: '',
     MyWallet: '',
     users:[],
-    modalDatas:[],
   },
   getters: {
     getStatus(state) {
@@ -31,9 +30,6 @@ export default new Vuex.Store({
     getUsers(state){
       return state.users;
     },
-    getModalDatas(state){
-      return state.modalDatas;
-    },
   },
 
   mutations: {
@@ -46,21 +42,22 @@ export default new Vuex.Store({
     setUpDateDisplayName(state, user) {
       state.displayName = user;
     },
+    setUpDateMyWallet(state, user) {
+      state.MyWallet = user;
+    },
     resetState(state) {
       const getDefaultState = () => {
         return {
           status: '',
           user: '',
           displayName: '',
+          MyWallet:'',
         };
       };
       Object.assign(state, getDefaultState());
     },
     setUsersData(state, users) {
       state.users = users
-    },
-    setModalDatas(state, modalDatas) {
-      state.modalDatas = modalDatas
     },
   },
   actions: {
@@ -81,6 +78,7 @@ export default new Vuex.Store({
         commit('onUserStatusChanged', true);
         commit('setUpDateUser', user);
         commit('setUpDateDisplayName', user.displayName);
+        commit('setUpDateMyWallet', 1000);
         router.push('/home');
       } catch (e) {
         alert(e.message);
@@ -95,6 +93,7 @@ export default new Vuex.Store({
           const user = firebase.auth().currentUser;
           commit('setUpDateUser', user);
           commit('setUpDateDisplayName', user.displayName);
+          commit('setUpDateMyWallet', 1000);
           router.push('/home');
         })
         .catch((e) => {
@@ -113,25 +112,5 @@ export default new Vuex.Store({
       this.commit('resetState');
       router.push('/signin');
     },
-    modalSet (context, usersIndex) {
-      const modalDatas = [];
-      const user = firebase.auth().currentUser
-      const db = firebase.firestore();
-      db.collection('users')
-          .where(firebase.firestore.FieldPath.documentId(), "!=", user.uid)
-          .get()
-          .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                  const modalData = {
-                      uid: usersIndex,
-                      name: doc.data().name,
-                      MyWallet: doc.data().MyWallet
-                  }
-                  modalDatas.push(modalData)
-                  context.commit('setModalDatas', modalDatas)
-                  console.log(modalDatas)
-              });
-              });
-            }
   },
 });
