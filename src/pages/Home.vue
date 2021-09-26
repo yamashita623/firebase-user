@@ -54,7 +54,6 @@
 import Modal from '../modal/modal1.vue';
 import Modal2 from '../modal/modal2.vue';
 import { mapGetters } from 'vuex';
-import firebase from 'firebase';
 
 export default {
   data() {
@@ -70,30 +69,15 @@ export default {
     Modal,
     Modal2,
   },
-  computed: mapGetters(['getUserName', 'getMyWallet']),
+  computed: mapGetters(['getUserName', 'getMyWallet', 'getAllUsers']),
 
   created() {
     this.$store.dispatch('displayName', this);
+    this.$store.dispatch('getAllUsersDB', this);
   },
   mounted() {
+    this.users = this.getAllUsers;
     this.userName = this.getUserName;
-
-    const currentUser = firebase.auth().currentUser;
-    this.uid = currentUser.uid;
-    firebase
-      .firestore()
-      .collection('users')
-      .where(firebase.firestore.FieldPath.documentId(), '!=', currentUser.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let data = {
-            name: doc.data().name,
-            MyWallet: doc.data().MyWallet,
-          };
-          this.users.push(data);
-        });
-      });
   },
   methods: {
     logoutUser() {
