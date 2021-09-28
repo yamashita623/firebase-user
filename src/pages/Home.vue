@@ -4,7 +4,7 @@
       <div>
         <button @click="logoutUser">ログアウト</button>
       </div>
-      <span>{{ userName }}さんようこそ！！</span>
+      <span>{{ getUserName }}さんようこそ！！</span>
       <span>残高 : {{ getMyWallet }}</span>
     </div>
 
@@ -15,7 +15,7 @@
           <th>ユーザー</th>
         </tr>
       </thead>
-      <tr v-for="(user, index) in users" v-bind:key="index">
+      <tr v-for="(user, index) in getAllUsers" v-bind:key="index">
         <td>{{ user.name }}</td>
         <td>
           <button class="button2" @click="openModal(user, index)">
@@ -58,11 +58,9 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      userName: '',
       showContent: false,
       showContent2: false,
       usersIndex: '',
-      users: [],
     };
   },
   components: {
@@ -73,11 +71,7 @@ export default {
 
   created() {
     this.$store.dispatch('displayName', this);
-    this.$store.dispatch('getAllUsersDB', this);
-  },
-  mounted() {
-    this.users = this.getAllUsers;
-    this.userName = this.getUserName;
+    this.$store.dispatch('setAllUsersDB', this);
   },
   methods: {
     logoutUser() {

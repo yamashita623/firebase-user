@@ -121,7 +121,7 @@ export default new Vuex.Store({
       this.commit('resetState');
       router.push('/signin');
     },
-    getAllUsersDB() {
+    setAllUsersDB() {
       let DB = [];
       const currentUser = firebase.auth().currentUser;
       this.uid = currentUser.uid;
