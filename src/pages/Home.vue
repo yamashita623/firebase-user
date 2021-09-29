@@ -1,67 +1,92 @@
 <template>
   <div>
-    <div class="login-message-area">
+    <div class="home">
       <div>
-        <span>{{ userName }}さんようこそ！！</span>
-      </div>
-
-      <div>
-        <span>残高 : 1000</span>
         <button @click="logoutUser">ログアウト</button>
       </div>
+      <span>{{ getUserName }}さんようこそ！！</span>
+      <span>残高 : {{ getMyWallet }}</span>
     </div>
 
     <h1>ユーザ一覧</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ユーザー</th>
+        </tr>
+      </thead>
+      <tr v-for="(user, index) in getAllUsers" v-bind:key="index">
+        <td>{{ user.name }}</td>
+        <td>
+          <button class="button2" @click="openModal(user, index)">
+            Walletを見る
+          </button>
+        </td>
+        <td>
+          <button class="button2" @click="openModal2(index)">送る</button>
+        </td>
+      </tr>
+    </table>
 
-    <div class="user-list-wrapper">
-      <h4>ユーザ名</h4>
+    <div>
+      <transition>
+        <Modal
+          v-bind:val="usersIndex"
+          v-if="showContent"
+          @close="closeModal"
+        ></Modal>
+      </transition>
+    </div>
 
-      <ul class="user-list">
-        <li>
-          <span>TEST</span>
-          <form>
-            <button>walletを見る</button>
-            <button>送る</button>
-          </form>
-        </li>
-        <li>
-          <span>TEST</span>
-          <form>
-            <button>walletを見る</button>
-            <button>送る</button>
-          </form>
-        </li>
-        <li>
-          <span>TEST</span>
-          <form>
-            <button>walletを見る</button>
-            <button>送る</button>
-          </form>
-        </li>
-      </ul>
+    <div>
+      <transition>
+        <Modal2
+          v-bind:val="usersIndex"
+          v-if="showContent2"
+          @close="closeModal2"
+        ></Modal2>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
+import Modal from '../modal/modal1.vue';
+import Modal2 from '../modal/modal2.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
-      userName: '',
+      showContent: false,
+      showContent2: false,
+      usersIndex: '',
     };
   },
-  computed: mapGetters(['getUserName']),
+  components: {
+    Modal,
+    Modal2,
+  },
+  computed: mapGetters(['getUserName', 'getMyWallet', 'getAllUsers']),
+
   created() {
     this.$store.dispatch('displayName', this);
-  },
-  mounted() {
-    this.userName = this.getUserName;
+    this.$store.dispatch('setAllUsersDB', this);
   },
   methods: {
     logoutUser() {
       this.$store.dispatch('logoutUser', this);
+    },
+    openModal(user) {
+      console.log(user);
+      this.usersIndex = user;
+      this.showContent = true;
+    },
+    closeModal() {
+      this.showContent = false;
+    },
+    closeModal2() {
+      this.showContent2 = false;
     },
   },
 };

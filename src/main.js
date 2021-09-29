@@ -16,8 +16,8 @@ const config = {
 };
 
 firebase.initializeApp(config);
-
-export default firebase;
+const db = firebase.firestore()
+export default db
 
 Vue.config.productionTip = false;
 

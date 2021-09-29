@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from 'firebase';
 import router from './router.js';
+import db from './main';
 
 Vue.use(Vuex);
 
@@ -10,6 +11,8 @@ export default new Vuex.Store({
     status: '',
     user: '',
     displayName: '',
+    MyWallet: '',
+    AllUsers: [],
   },
   getters: {
     getStatus(state) {
@@ -20,6 +23,12 @@ export default new Vuex.Store({
     },
     getUserName(state) {
       return state.displayName;
+    },
+    getMyWallet(state) {
+      return state.MyWallet;
+    },
+    getAllUsers(state) {
+      return state.AllUsers;
     },
   },
 
@@ -33,12 +42,20 @@ export default new Vuex.Store({
     setUpDateDisplayName(state, user) {
       state.displayName = user;
     },
+    setUpDateMyWallet(state, user) {
+      state.MyWallet = user;
+    },
+    setAllUsers(state, user) {
+      state.AllUsers = user;
+    },
     resetState(state) {
       const getDefaultState = () => {
         return {
           status: '',
           user: '',
           displayName: '',
+          MyWallet: '',
+          AllUsers: [],
         };
       };
       Object.assign(state, getDefaultState());
@@ -54,8 +71,15 @@ export default new Vuex.Store({
         await user.updateProfile({
           displayName: userInfo.userName,
         });
+        db.collection('users').doc().set({
+          name: userInfo.userName,
+          MyWallet: 1000,
+          uid: user.uid,
+        });
+        commit('onUserStatusChanged', true);
         commit('setUpDateUser', user);
         commit('setUpDateDisplayName', user.displayName);
+        commit('setUpDateMyWallet', 1000);
         router.push('/home');
       } catch (e) {
         alert(e.message);
@@ -70,6 +94,15 @@ export default new Vuex.Store({
           const user = firebase.auth().currentUser;
           commit('setUpDateUser', user);
           commit('setUpDateDisplayName', user.displayName);
+          const uid = firebase.auth().currentUser.uid;
+          db.collection('users')
+            .where('uid', '==', uid)
+            .get()
+            .then((docs) => {
+              docs.forEach((doc) => {
+                commit('setUpDateMyWallet', doc.data().MyWallet);
+              });
+            });
           router.push('/home');
         })
         .catch((e) => {
@@ -87,6 +120,26 @@ export default new Vuex.Store({
       firebase.auth().signOut();
       this.commit('resetState');
       router.push('/signin');
+    },
+    setAllUsersDB() {
+      let DB = [];
+      const currentUser = firebase.auth().currentUser;
+      this.uid = currentUser.uid;
+      firebase
+        .firestore()
+        .collection('users')
+        .where(firebase.firestore.FieldPath.documentId(), '!=', currentUser.uid)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            let data = {
+              name: doc.data().name,
+              MyWallet: doc.data().MyWallet,
+            };
+            DB.push(data);
+            this.commit('setAllUsers', DB);
+          });
+        });
     },
   },
 });
