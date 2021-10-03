@@ -1,15 +1,19 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <p>あなたの残高{{ val }}</p>
-          <span>送る金額</span>
-          <input type="text" v-model="$store.state.transfer">
-          <div class="modalBtnContainer">
-          <button class="modalBtn modalSendBtn" @click="$emit('send')">送る</button>
-          <button @click="$emit('close')">閉じる</button>
+    <div class="modal">
+      <div class="modalContainer">
+        <div class="modalTextContainer">
+          <div class="modalText">
+            <p class="modalBalance">あなたの残高{{ val }}</p>
+            <span>送る金額</span><br />
+            <input type="text" v-model="$store.state.transfer" />
           </div>
+        </div>
+        <div class="modalBtnContainer">
+          <button class="modalBtn modalSendBtn" @click="$emit('send')">
+            送る
+          </button>
+          <button class="modalBtn" @click="$emit('close')">閉じる</button>
         </div>
       </div>
     </div>
@@ -28,29 +32,59 @@ export default {
 </script>
 
 <style scoped>
-.modal-mask {
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
-  z-index: 9998;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: table;
-  transition: opacity 0.3s ease;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.5);
 }
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+.modalContainer {
+  background: #fafafa;
+  width: 300px;
+  height: 180px;
+  border-radius: 4px;
+  position: relative;
 }
-.modal-container {
-  width: 70%;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+.modalTextContainer {
+  position: absolute;
+  width: 100%;
+  height: 60%;
+}
+.modalText {
+  margin-top: 1em;
+  margin-left: 1em;
+}
+.modalBtnContainer {
+  display: flex;
+  justify-content: space-evenly;
+  position: relative;
+  top: 108px;
+  width: 100%;
+  height: 40%;
+  border-radius: 0 0 4px 4px;
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  background: #8888;
+}
+.modalBtn {
+  position: relative;
+  top: 25%;
+  height: 30px;
+  width: 80px;
+  background-color: #e74c3c;
+}
+.modalBtn:hover {
+  background-color: #ff5341;
+}
+.modalSendBtn {
+  background-color: #1da1f3;
+}
+.modalSendBtn:hover {
+  background-color: #5fb1f1;
 }
 </style>

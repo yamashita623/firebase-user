@@ -5,16 +5,16 @@
         <button class="logOutBtn" @click="logoutUser">ログアウト</button>
       </div>
       <div class="userInfo">
-      <span>{{ getUserName }}さんようこそ！！</span>
-      <span>残高 : {{ getMyWallet }}</span>
+        <span>{{ getUserName }}さんようこそ！！</span>
+        <span>残高 : {{ getMyWallet }}</span>
       </div>
     </div>
 
-    <h2>ユーザ一覧</h2>
+    <h1 class="title">ユーザ一覧</h1>
     <table>
       <thead>
-        <tr>
-          <th>ユーザ名</th>
+        <tr class="headContainer">
+          <th class="leftHead">ユーザ名</th>
         </tr>
       </thead>
       <tr v-for="(user, index) in getAllUsers" v-bind:key="index">
@@ -129,4 +129,77 @@ export default {
 };
 </script>
 
+<style scoped>
+.title {
+  text-align: center;
+}
 
+button {
+  color: #fff;
+  background-color: #1da1f3;
+  border-radius: 20px;
+  display: inline-block;
+  border: none;
+}
+
+button:hover {
+  background-color: #5fb1f1;
+}
+
+button:focus {
+  outline: 0px;
+}
+
+.logOutBtn {
+  margin: 10px auto;
+  height: 40px;
+  width: 120px;
+  font-size: 16px;
+}
+
+.userInfo {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.logOut {
+  float: right;
+  margin: 0 8% 40px 0;
+}
+
+table {
+  margin: 0 auto;
+  width: 60%;
+}
+
+.leftHead {
+  width: 200px;
+  height: 40px;
+  float: left;
+  text-align: center;
+}
+.rightHead {
+  width: 120px;
+  height: 40px;
+}
+
+.button2 {
+  height: 30px;
+  width: 120px;
+  font-size: 16px;
+}
+
+.v-enter {
+  opacity: 0;
+}
+.v-enter-active {
+  transition: opacity 300ms ease-out;
+}
+.v-leave-to {
+  opacity: 0;
+}
+.v-leave-active {
+  transition: opacity 300ms ease-out;
+}
+</style>

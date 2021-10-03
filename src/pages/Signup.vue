@@ -56,5 +56,11 @@ a {
 }
 .button-login {
   color: #4297b9;
+  width: 100px;
+  height: 30px;
+}
+input:focus {
+  border: 2px solid blue;
+  outline: none;
 }
 </style>

@@ -12,8 +12,8 @@
       </tr>
     </table>
     <br />
-    <button @click="SignIn">ログイン</button>
-    <router-link to="/signup">新規登録はこちらから</router-link>
+    <button class="button-login" @click="SignIn">ログイン</button>
+    <router-link to="/signup"><span>新規登録はこちらから</span></router-link>
   </div>
 </template>
 
@@ -49,5 +49,15 @@ a {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+}
+.button-login {
+  color: #4297b9;
+  width: 100px;
+  height: 30px;
+}
+
+input:focus {
+  border: 2px solid blue;
+  outline: none;
 }
 </style>
