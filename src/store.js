@@ -13,6 +13,12 @@ export default new Vuex.Store({
     displayName: '',
     MyWallet: '',
     AllUsers: [],
+    isUid: '',
+    isBalance: '',
+    sendBoxIndex: '',
+    transfer: '',
+    isName: '',
+    isMyWallet: '',
   },
   getters: {
     getStatus(state) {
@@ -29,6 +35,15 @@ export default new Vuex.Store({
     },
     getAllUsers(state) {
       return state.AllUsers;
+    },
+    getTransfer(state) {
+      return state.transfer;
+    },
+    getIsName(state) {
+      return state.isName;
+    },
+    getIsMyWallet(state) {
+      return state.isMyWallet;
     },
   },
 
@@ -59,6 +74,26 @@ export default new Vuex.Store({
         };
       };
       Object.assign(state, getDefaultState());
+    },
+    updateMyWallet(state, getTransfer) {
+      state.MyWallet = state.MyWallet - getTransfer;
+    },
+    updateDestinationWallet(state, getTransfer) {
+      state.AllUsers[state.sendBoxIndex].MyWallet += Number(getTransfer);
+    },
+    resetSendForm(state) {
+      state.transfer = null;
+      state.isName = null;
+      state.isMyWallet = null;
+    },
+    sendMoney(state) {
+      state.isUid = event.currentTarget.getAttribute('data-uid');
+      state.isBalance = event.currentTarget.getAttribute('data-MyWallet');
+      state.sendBoxIndex = event.currentTarget.getAttribute('data-index');
+    },
+    checkMyWallet(state) {
+      state.isName = event.currentTarget.getAttribute('data-name');
+      state.isMyWallet = event.currentTarget.getAttribute('data-MyWallet');
     },
   },
   actions: {
@@ -121,8 +156,8 @@ export default new Vuex.Store({
       this.commit('resetState');
       router.push('/signin');
     },
-    setAllUsersDB() {
-      let DB = [];
+    setAllUsers() {
+      const DB = [];
       const currentUser = firebase.auth().currentUser;
       this.uid = currentUser.uid;
       firebase
@@ -132,7 +167,8 @@ export default new Vuex.Store({
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            let data = {
+            const data = {
+              uid: doc.data().uid,
               name: doc.data().name,
               MyWallet: doc.data().MyWallet,
             };
@@ -140,6 +176,39 @@ export default new Vuex.Store({
             this.commit('setAllUsers', DB);
           });
         });
+    },
+    async updateUserWallet({ state, commit }, getTransfer) {
+      const isMyUid = firebase.auth().currentUser.uid;
+      try {
+        const receiverDocs = await db
+          .collection('users')
+          .where('uid', '==', state.isUid)
+          .get();
+        const receiverId = receiverDocs.docs[0].id;
+        const senderDocs = await db
+          .collection('users')
+          .where('uid', '==', isMyUid)
+          .get();
+        const senderId = senderDocs.docs[0].id;
+        await db.runTransaction(async (transaction) => {
+          // 送金される側
+          await transaction.update(db.collection('users').doc(receiverId), {
+            MyWallet: firebase.firestore.FieldValue.increment(
+              Number(getTransfer)
+            ),
+          });
+          commit('updateDestinationWallet', getTransfer);
+          // 送金する側
+          await transaction.update(db.collection('users').doc(senderId), {
+            MyWallet: firebase.firestore.FieldValue.increment(
+              -Number(getTransfer)
+            ),
+          });
+          commit('updateMyWallet', getTransfer);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 });
